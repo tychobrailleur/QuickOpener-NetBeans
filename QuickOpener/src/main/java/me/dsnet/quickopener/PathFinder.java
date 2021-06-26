@@ -1,10 +1,22 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2017 Diego Zambelli Sessona (diego.sessona@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package me.dsnet.quickopener;
 
-import java.io.File; 
+import java.io.File;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -13,21 +25,19 @@ import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
-import org.openide.loaders.DataObject; 
+import org.openide.loaders.DataObject;
 import org.openide.loaders.DataShadow;
 import org.openide.loaders.MultiDataObject;
 import org.openide.nodes.Node;
 import org.openide.windows.TopComponent;
-
-
 
 /**
  *
  * @author SessonaD
  */
 public class PathFinder {
-    
-    public static File getMainProjectRoot(){
+
+    public static File getMainProjectRoot() {
         try {
             Project project = OpenProjects.getDefault().getMainProject();
             FileObject root = project.getProjectDirectory();
@@ -36,40 +46,40 @@ public class PathFinder {
             return null;
         }
     }
-    
-    public static String getMainProjectRootPath(){
+
+    public static String getMainProjectRootPath() {
         try {
             return getMainProjectRoot().getAbsolutePath();
         } catch (Exception e) {
             return null;
         }
     }
-    
-    public static String getMyNetbeansConfPath(){        
-        try {            
+
+    public static String getMyNetbeansConfPath() {
+        try {
             FileObject root = FileUtil.getConfigRoot();
             return FileUtil.toFile(root).getAbsolutePath();
         } catch (Exception e) {
             return null;
         }
     }
-    
-    public static File getActiveFile(DataObject dataObj,boolean isFolder){
-        try{
-            if(dataObj == null){
+
+    public static File getActiveFile(DataObject dataObj, boolean isFolder) {
+        try {
+            if (dataObj == null) {
                 return getActiveFileFromSelectedNode(isFolder);
-            }else{
-                try{
-                    return getActiveFileFromDataObject(dataObj,isFolder);
-                }catch(NullPointerException npex){
+            } else {
+                try {
+                    return getActiveFileFromDataObject(dataObj, isFolder);
+                } catch (NullPointerException npex) {
                     return getActiveFileFromSelectedNode(isFolder);
-                }                
+                }
             }
         } catch (Exception e) {
             return null;
         }
     }
-    
+
     public static String getActivePath(DataObject dataObj, boolean isFolder) {
         File found = getActiveFile(dataObj, isFolder);
         return getActivePath(found);
@@ -88,27 +98,28 @@ public class PathFinder {
         }
         return null;
     }
-    
-    public static String getRelativeActivePath(DataObject dataObj,boolean isFolder){
-        try{
-            String filePath = getActivePath(dataObj,isFolder);
+
+    public static String getRelativeActivePath(DataObject dataObj, boolean isFolder) {
+        try {
+            String filePath = getActivePath(dataObj, isFolder);
             String rootPath = getMainProjectRootPath();
-            if((filePath != null && !filePath.isEmpty())&&(rootPath != null && !rootPath.isEmpty())&&(filePath.contains(rootPath))){
-                return (filePath.substring(rootPath.length() + 1));                
-            }else{
+            if ((filePath != null && !filePath.isEmpty()) && (rootPath != null && !rootPath.isEmpty()) && (filePath.contains(rootPath))) {
+                return (filePath.substring(rootPath.length() + 1));
+            } else {
                 return null;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
-    
-    private static File getActiveFileFromDataObject(DataObject dataObj,boolean isFolder){        
-        if(dataObj == null){ return null;}
-        else{
-            try{  
+
+    private static File getActiveFileFromDataObject(DataObject dataObj, boolean isFolder) {
+        if (dataObj == null) {
+            return null;
+        } else {
+            try {
                 dataObj = getDataObjectAndResolveShadows(dataObj);
-                File toReturn = getFileFromDataObject(dataObj,isFolder);
+                File toReturn = getFileFromDataObject(dataObj, isFolder);
                 if (toReturn != null && toReturn.exists()) {
                     return toReturn;
                 } else {
@@ -131,8 +142,8 @@ public class PathFinder {
                             return isFolder ? found.getParentFile() : found;
                         }
                     }
-                }                           
-            }catch(Exception e){
+                }
+            } catch (Exception e) {
                 return null;
             }
             return null;
@@ -142,41 +153,41 @@ public class PathFinder {
     public static String getActivePath(File file) {
         return ((file != null) && (file.exists())) ? file.getAbsolutePath() : null;
     }
-    
+
     //TODO check deprecated api
-    private static File getFileFromFileObject(FileObject fobj){
-        try{
-            if(fobj == null){
+    private static File getFileFromFileObject(FileObject fobj) {
+        try {
+            if (fobj == null) {
                 return null;
-            }else if(fobj.isRoot()){
-                    FileSystem fs =fobj.getFileSystem();
-                    String path = fs.getSystemName();
-                    File f = new File(path);                    
-                    return f;
-            }else{
+            } else if (fobj.isRoot()) {
+                FileSystem fs = fobj.getFileSystem();
+                String path = fs.getSystemName();
+                File f = new File(path);
+                return f;
+            } else {
                 return getFileFromFileObject(fobj.getParent());
             }
-        }catch(FileStateInvalidException e){
+        } catch (FileStateInvalidException e) {
             //e.printStackTrace();
             return null;
         }
-        
+
     }
-    
+
     private static File getFileFromDataObject(DataObject dataObj, boolean isFolder) {
         try {
-            File current = FileUtil.toFile(dataObj.getPrimaryFile());            
+            File current = FileUtil.toFile(dataObj.getPrimaryFile());
             if (!isFolder) {
                 return current;
             } else {
                 return (current.isDirectory()) ? current : current.getParentFile();
             }
         } catch (Exception e) {
-           // e.printStackTrace();
+            // e.printStackTrace();
             return null;
         }
     }
-    
+
     private static File getActiveFileFromSelectedNode(boolean isFolder) {
         try {
             TopComponent topActive = TopComponent.getRegistry().getActivated();
@@ -216,5 +227,5 @@ public class PathFinder {
         }
         return dataObject;
     }
-    
+
 }

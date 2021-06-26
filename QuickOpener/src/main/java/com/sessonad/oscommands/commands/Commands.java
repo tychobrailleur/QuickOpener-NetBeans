@@ -1,5 +1,20 @@
+/*
+ * Copyright (C) 2017 Diego Zambelli Sessona (diego.sessona@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.sessonad.oscommands.commands;
-
 
 import com.sessonad.oscommands.detector.OSDetector;
 import com.sessonad.oscommands.detector.OperatingSystem;
@@ -9,7 +24,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author SessonaD
@@ -18,16 +32,18 @@ import java.util.logging.Logger;
 public abstract class Commands {
 
     private static final Logger LOG = Logger.getLogger(Commands.class.getName());
-    
+
     static Commands platform;
-    
+
     @SuppressWarnings("unchecked")
-    public static <T extends Commands> T getPlatform(){
-        if (platform == null)initializePlatform();
-        return (T)platform;
+    public static <T extends Commands> T getPlatform() {
+        if (platform == null) {
+            initializePlatform();
+        }
+        return (T) platform;
     }
-    
-    static void initializePlatform(){
+
+    static void initializePlatform() {
         OperatingSystem os = OSDetector.detectOS();
         switch (os) {
             case WINDOWS:
@@ -58,19 +74,19 @@ public abstract class Commands {
                 break;
         }
     }
-    
+
     public abstract OperatingSystem getOperatingSystem();
-    
+
     public void openInShell(String currentPath) throws Exception {
         String fullCommand;
-        if(getOperatingSystem().equals(OperatingSystem.WINDOWS)){
-            fullCommand = getOperatingSystem().getShellCommand()+"\""+currentPath+"\"";
-        }else{
+        if (getOperatingSystem().equals(OperatingSystem.WINDOWS)) {
+            fullCommand = getOperatingSystem().getShellCommand() + "\"" + currentPath + "\"";
+        } else {
             fullCommand = getOperatingSystem().getShellCommand() + currentPath;
         }
         Runtime.getRuntime().exec(fullCommand);
     }
-    
+
     /**
      * Old function. Only left for backward compatibility.
      *
@@ -89,6 +105,7 @@ public abstract class Commands {
             executeFileSystemBrowserCommand(current);
         }
     }
+
     /**
      * Browses to the file or directory (depending on the features of the
      * OS/file-browser). If it does work, then
@@ -121,10 +138,10 @@ public abstract class Commands {
     }
 
     /**
-     * 
+     *
      * @param fileOrDir
      * @return exit-code from the process (!=0 means error)
-     * @throws IOException 
+     * @throws IOException
      */
     protected Process executeFileSystemBrowserCommand(File fileOrDir) throws IOException {
         final boolean isFile = fileOrDir.isFile();

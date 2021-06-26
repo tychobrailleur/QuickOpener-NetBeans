@@ -30,19 +30,16 @@ public class CustomCommandPopupAction extends AbstractAction implements ActionLi
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DialogCustomCommandRun dialogue = new DialogCustomCommandRun(null, true);
-                    final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    final int x = (screenSize.width - dialogue.getWidth()) / 2;
-                    final int y = (screenSize.height - dialogue.getHeight()) / 2;
-                    dialogue.setLocation(x, y);
-                    dialogue.setVisible(true);
-
-                } catch (HeadlessException ex) {
-                }
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                DialogCustomCommandRun dialogue = new DialogCustomCommandRun(null, true);
+                final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                final int x = (screenSize.width - dialogue.getWidth()) / 2;
+                final int y = (screenSize.height - dialogue.getHeight()) / 2;
+                dialogue.setLocation(x, y);
+                dialogue.setVisible(true);
+                
+            } catch (HeadlessException ex) {
             }
         });
     }

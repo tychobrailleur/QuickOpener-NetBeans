@@ -20,7 +20,6 @@ import com.sessonad.oscommands.detector.OSDetector;
 import java.io.File;
 import javax.swing.JOptionPane;
 import me.dsnet.quickopener.prefs.shell.chooser.IShellConfigurator;
-import me.dsnet.quickopener.prefs.shell.chooser.IShellConfigurator;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
@@ -38,30 +37,26 @@ import org.openide.util.NbBundle;
     "MATETERMINAL_command=%s%/usr/bin/mate-terminal",
     "MATETERMINAL_label=mate-terminal"
 })
-public class MateTerminalConfigurator implements IShellConfigurator{
+public class MateTerminalConfigurator implements IShellConfigurator {
 
-     @Override 
-    public String configure() { 
+    @Override
+    public String configure() {
         File dir;
         dir = new FileChooserBuilder(Bundle.MATETERMINAL_dir())
                 .setTitle(String.format(Bundle.MATETERMINAL_title(), getLabel()))
                 .setDirectoriesOnly(true)
-                .setSelectionApprover(new FileChooserBuilder.SelectionApprover() {
- 
-                    @Override
-                    public boolean approve(File[] files) {
-                        if (null != files && files.length == 1) {
-                            String absolutePath = FileUtil.normalizeFile(files[0]).getAbsolutePath();
-                            String exeFile = String.format(Bundle.MATETERMINAL_exefile(), absolutePath, File.separator);
-                            final boolean exists = new File(exeFile).exists();
-                            if (!exists) {
-                                JOptionPane.showMessageDialog(null, String.format(Bundle.MATETERMINAL_exefilenotfound(), absolutePath));
-                            }
-                            return exists;
+                .setSelectionApprover((File[] files) -> {
+                    if (null != files && files.length == 1) {
+                        String absolutePath = FileUtil.normalizeFile(files[0]).getAbsolutePath();
+                        String exeFile = String.format(Bundle.MATETERMINAL_exefile(), absolutePath, File.separator);
+                        final boolean exists = new File(exeFile).exists();
+                        if (!exists) {
+                            JOptionPane.showMessageDialog(null, String.format(Bundle.MATETERMINAL_exefilenotfound(), absolutePath));
                         }
-                        return false;
+                        return exists;
                     }
-                })
+                    return false;
+        })
                 .setApproveText(Bundle.MATETERMINAL_ApproveTextBtn()).showOpenDialog();
 
         if (dir != null) {
@@ -80,5 +75,5 @@ public class MateTerminalConfigurator implements IShellConfigurator{
     public boolean isAvailable() {
         return OSDetector.detectOS().isLinux();
     }
-    
+
 }

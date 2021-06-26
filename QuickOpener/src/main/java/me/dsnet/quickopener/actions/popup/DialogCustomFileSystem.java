@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2017 Diego Zambelli Sessona (diego.sessona@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package me.dsnet.quickopener.actions.popup;
 
@@ -9,7 +21,6 @@ import me.dsnet.quickopener.QuickMessages;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.text.MessageFormat;
 import javax.swing.*;
 import static me.dsnet.quickopener.LAFUtils.convertToLink;
 import org.openide.DialogDisplayer;
@@ -40,19 +51,19 @@ public class DialogCustomFileSystem extends javax.swing.JDialog {
         jTable2.getColumnModel().getColumn(0).setPreferredWidth(150);
         jTable2.getColumnModel().getColumn(0).setMaxWidth(400);
         jTable2.getColumnModel().getColumn(0).setMinWidth(100);
-        
-        mainProjectPath=PathFinder.getMainProjectRootPath();
-        if(mainProjectPath!=null){
+
+        mainProjectPath = PathFinder.getMainProjectRootPath();
+        if (mainProjectPath != null) {
             jLabel8.setEnabled(true);
             jLabel8.setText(convertToLink(getPathLongerThan(mainProjectPath)));
         }
-        selectioPath=PathFinder.getActivePath(null,true);
-        if(selectioPath!=null){
+        selectioPath = PathFinder.getActivePath(null, true);
+        if (selectioPath != null) {
             jLabel9.setEnabled(true);
             jLabel9.setText(convertToLink(getPathLongerThan(selectioPath)));
         }
-        mynetbeansPath=PathFinder.getMyNetbeansConfPath();
-        if(mynetbeansPath!=null){
+        mynetbeansPath = PathFinder.getMyNetbeansConfPath();
+        if (mynetbeansPath != null) {
             jLabel7.setEnabled(true);
             jLabel7.setText(convertToLink(getPathLongerThan(mynetbeansPath)));
         }
@@ -69,28 +80,28 @@ public class DialogCustomFileSystem extends javax.swing.JDialog {
             }
         });
     }
-    
-    private String getPathLongerThan(String path){
-        if(path.length()>=CHARSNUMBER){            
-            String intpath = path.substring(path.length()-CHARSNUMBER);
+
+    private String getPathLongerThan(String path) {
+        if (path.length() >= CHARSNUMBER) {
+            String intpath = path.substring(path.length() - CHARSNUMBER);
             int idx = intpath.indexOf("\\");
-            if(idx!=-1){
+            if (idx != -1) {
                 return "..." + intpath.substring(idx);
             }
             int adx = intpath.indexOf("/");
-            if(adx!=-1){
+            if (adx != -1) {
                 return "..." + intpath.substring(adx);
             }
             return "..." + intpath;
-        }else{
+        } else {
             return path;
         }
     }
-    
-    public String getCommand(){
+
+    public String getCommand() {
         return cmdTextField.getText();
     }
-    
+
     /**
      * @return the return status of this dialog - one of RET_OK or RET_CANCEL
      */
@@ -326,16 +337,16 @@ public class DialogCustomFileSystem extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        File file= new File(cmdTextField.getText());
-        if(file.exists()&& file.isDirectory()){
+        File file = new File(cmdTextField.getText());
+        if (file.exists() && file.isDirectory()) {
             doClose(RET_OK);
-        }else{
-            NotifyDescriptor d = new NotifyDescriptor.Message(QuickMessages.NOT_IN_FILE_SYSTEM,NotifyDescriptor.WARNING_MESSAGE);
-            DialogDisplayer.getDefault().notify(d);            
+        } else {
+            NotifyDescriptor d = new NotifyDescriptor.Message(QuickMessages.NOT_IN_FILE_SYSTEM, NotifyDescriptor.WARNING_MESSAGE);
+            DialogDisplayer.getDefault().notify(d);
         }
-        
+
     }//GEN-LAST:event_okButtonActionPerformed
-    
+
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         doClose(RET_CANCEL);
     }//GEN-LAST:event_cancelButtonActionPerformed
@@ -359,19 +370,19 @@ public class DialogCustomFileSystem extends javax.swing.JDialog {
     }//GEN-LAST:event_jTable2MouseClicked
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        if(jLabel7.isEnabled()){
+        if (jLabel7.isEnabled()) {
             cmdTextField.setText(mynetbeansPath);
         }
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
-        if(jLabel8.isEnabled()){
+        if (jLabel8.isEnabled()) {
             cmdTextField.setText(mainProjectPath);
         }
     }//GEN-LAST:event_jLabel8MouseClicked
 
     private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
-        if(jLabel9.isEnabled()){
+        if (jLabel9.isEnabled()) {
             cmdTextField.setText(selectioPath);
         }
     }//GEN-LAST:event_jLabel9MouseClicked
@@ -381,12 +392,12 @@ public class DialogCustomFileSystem extends javax.swing.JDialog {
         int returnVal = fileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            if(file!=null){
+            if (file != null) {
                 cmdTextField.setText(file.getAbsolutePath());
             }
         }
     }//GEN-LAST:event_browseButtonActionPerformed
-    
+
     private void doClose(int retStatus) {
         returnStatus = retStatus;
         setVisible(false);
